@@ -11,6 +11,10 @@ const Button = (props) => {
 
 Button.propTypes={
     text: PropTypes.string.isRequired,
-    bgColor: PropTypes.oneOf(['skyblue','tomato','transparent']).isRequired
+    bgColor: PropTypes.oneOf(['skyblue','tomato','transparent'])
 }
+Button.defaultProps={
+    bgColor:'skyblue'
+}
+
 export default Button
