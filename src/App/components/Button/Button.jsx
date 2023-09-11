@@ -4,7 +4,10 @@ import PropTypes from 'prop-types'
 
 
 const Button = (props) => {
-    return <button className={style.Button} style={{
+    return <button onClick={(evt)=>{
+        console.log(evt);
+        props.onClick('1.5l de coca');
+    }} className={style.Button} style={{
         backgroundColor: props.bgColor,
         ...props.style,
     }}>{props.text}</button>
@@ -13,6 +16,7 @@ const Button = (props) => {
 Button.propTypes={
     text: PropTypes.string.isRequired,
     bgColor: PropTypes.oneOf(['skyblue','tomato','transparent']),
+    onClick: PropTypes.func.isRequired,
     style: PropTypes.shape({
         width: PropTypes.string,
         padding: PropTypes.string,
