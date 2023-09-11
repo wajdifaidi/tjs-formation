@@ -4,10 +4,11 @@ import PropTypes from 'prop-types'
 
 
 const Button = (props) => {
-    return <button onClick={(evt)=>{
+    function onclick(evt) {
         console.log(evt);
         props.onClick('1.5l de coca');
-    }} className={style.Button} style={{
+    }
+    return <button onClick={onclick} className={style.Button} style={{
         backgroundColor: props.bgColor,
         ...props.style,
     }}>{props.text}</button>
