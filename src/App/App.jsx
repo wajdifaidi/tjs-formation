@@ -1,16 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from './components/Button/Button.jsx';
 const App = (props) => {
+
+  const [state, setState] = useState({counter:0,hello:"world"})
+
+  
   return <div className='App'>
-    DEMAT BREIZH<hr />
-    <Button  color="red" style={{ width: '254px', padding: '60px 80px' }} >
-        Benjamin 
-        <img src="https://cdn4.iconfinder.com/data/icons/music-ui-solid-24px/24/tick_success_done_valid-2-256.png" style={{height:"32px",width:"32px"}}/>
-    </Button>
+    valeur de counter : {state.counter}<hr />
+    <Button bgColor="tomato" onClick={() => {
+      setState({...state,counter:state.counter-1});
+      if(state.counter===0)alert('on est a zero')
+      console.log(state);
+    }} >-</Button>
     <Button
-      text="button"
-      bgColor='skyblue'
-      onClick={(arg) => console.log('button 2 clické',arg) } />
+      onClick={() => {
+        setState({...state,counter:state.counter+1});
+        console.log(state);
+
+      }} >+</Button>
   </div>
 };
 export default App;

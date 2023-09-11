@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 
 const Button = (props) => {
-    console.log(props);
+    //console.log(props);
     return <button onClick={(props.onClick)} className={style.Button} style={{
         backgroundColor: props.bgColor,
         ...props.style,
