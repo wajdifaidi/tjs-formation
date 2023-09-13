@@ -7,6 +7,7 @@ import Navbar from "./components/ui/Navbar/Navbar";
 import Header from "./components/ui/Header/Header";
 import MemeViewer from "./components/ui/MemeViewer/MemeViewer";
 import { DummyMeme } from "./interfaces/common";
+import {store} from './store/store'
 const App = () => {
   const [current, setcurrent] = useState(DummyMeme);
   const [images, setimages] = useState([
