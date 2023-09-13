@@ -10,7 +10,9 @@ import { MemeThumbnailStoredDatas } from "./components/MemeThumbnail/MemeThumbna
 import { Routes, Route, useParams } from "react-router-dom";
 import { store } from "./store/store";
 import { change, clear } from "./store/current";
-
+import { useSelector } from "react-redux";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+import PdfDocument from "./components/PdfDocument/pdfDocument.jsx";
 const App = () => {
   return (
     <div className="App">
@@ -22,6 +24,7 @@ const App = () => {
           <Route path="/thumbnail" element={<MemeThumbnailStoredDatas />} />
           <Route path="/editor" element={<PageEditor />} />
           <Route path="/editor/:id" element={<PageEditor />} />
+          <Route path="/pdf" element={<PdfThumbnail />} />
         </Routes>
         <Footer />
       </FlexH3G>
@@ -29,14 +32,37 @@ const App = () => {
   );
 };
 
+function PdfThumbnail() {
+  const memes = useSelector((s) => s.ressources.memes);
+  const images = useSelector((s) => s.ressources.images);
+
+  return (
+    <div>
+      {memes.map((m) => (
+        <div key={"pdf-" + m.id}>
+          <PDFViewer height={"500px"} width={"500px"}>
+            <PdfDocument meme={m} />
+          </PDFViewer>
+          <PDFDownloadLink fileName={m.titre+".pdf"} document={<PdfDocument meme={m} />}>
+            dl : {m.titre}
+          </PDFDownloadLink>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function PageEditor() {
-  const params=useParams();
+  const params = useParams();
+  const memes = useSelector((s) => s.ressources.memes);
   useEffect(() => {
-    const current= store.getState().ressources.memes.find(m=>m.id===Number(params.id))
-    if(undefined!== current)store.dispatch(change(current))
+    const current = store
+      .getState()
+      .ressources.memes.find((m) => m.id === Number(params.id));
+    if (undefined !== current) store.dispatch(change(current));
     else store.dispatch(clear());
-  }, [params,store.getState()])
-  
+  }, [params.id, memes]);
+
   return (
     <FlexW1G>
       <MemeViewerStoredCurrent basePath="" />
