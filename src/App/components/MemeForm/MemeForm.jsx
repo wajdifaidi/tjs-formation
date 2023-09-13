@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./MemeForm.module.css";
 import Button from "../Button/Button";
-
+import { store } from "../../store/store";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { change } from "../../store/current";
+import { saveCurrent } from "../../store/current";
 const memeFormInitialState = {};
 
 const MemeForm = (props) => {
@@ -14,6 +17,7 @@ const MemeForm = (props) => {
         }}
         onSubmit={(evt) => {
           evt.preventDefault();
+          props.onMemeSubmit(props.meme);
         }}
       >
         <label htmlFor="titre">
@@ -48,7 +52,9 @@ const MemeForm = (props) => {
         >
           <option value="-1">Pas d'image</option>
           {props.images.map((e, i) => (
-            <option key={'opt-img-'+i} value={e.id}>{e.titre}</option>
+            <option key={"opt-img-" + i} value={e.id}>
+              {e.titre}
+            </option>
           ))}
         </select>
         <hr />
@@ -228,8 +234,55 @@ const MemeForm = (props) => {
   );
 };
 
-MemeForm.propTypes = {};
-
-MemeForm.defaultProps = {};
 
 export default MemeForm;
+/*
+export const MemeFormStoredData=(props)=>{
+  const [images, setimages] = useState([]);
+  useEffect(() => {
+    setimages(store.getState().ressources.images);
+    store.subscribe(()=>setimages(store.getState().ressources.images))
+  }, [])
+  
+
+  return <MemeForm {...props} images={images} onMemeChange={(newMeme)=>{
+    store.dispatch({type:'current/change',payload:newMeme})
+  }}></MemeForm>
+} */
+/*
+function mapDispatchToProps(dispatch) {
+  return {
+    onMemeChange: (newMeme) =>
+      dispatch({ type: "current/change", payload: newMeme }),
+  };
+}
+function mapStateToProps(storeState,ownProps) {
+  return {
+    ...ownProps,
+    images: storeState.ressources.images,
+  }
+}
+export const MemeFormStoredData=connect(mapDispatchToProps,mapStateToProps)(MemeForm);
+*/
+export const MemeFormStoredData = (props) => {
+  const dispatch = useDispatch();
+  const images = useSelector((s) => s.ressources.images);
+  const c = useSelector((s) => s.current);
+
+  return (
+    <MemeForm
+      {...props}
+      images={images}
+      meme={c}
+      onMemeChange={(newMeme) => {
+        //dispatch({ type: "current/change", payload: newMeme });
+        dispatch(change(newMeme));
+      }}
+      onMemeSubmit={(newMeme) => {
+        //dispatch({ type: "current/change", payload: newMeme });
+        dispatch(saveCurrent(newMeme));
+      }}
+    ></MemeForm>
+  );
+};
+
