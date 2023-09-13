@@ -7,7 +7,9 @@ import Navbar from "./components/ui/Navbar/Navbar";
 import Header from "./components/ui/Header/Header";
 import { MemeViewerStoredCurrent } from "./components/ui/MemeViewer/MemeViewer";
 import { MemeThumbnailStoredDatas } from "./components/MemeThumbnail/MemeThumbnail";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
+import { store } from "./store/store";
+import { change, clear } from "./store/current";
 
 const App = () => {
   return (
@@ -18,30 +20,29 @@ const App = () => {
         <Routes>
           <Route path="/" element={<h1>Bienvenue sur la homepage</h1>} />
           <Route path="/thumbnail" element={<MemeThumbnailStoredDatas />} />
-          <Route 
-            path="/editor"
-            element={
-              <FlexW1G>
-                <MemeViewerStoredCurrent basePath="" />
-                <MemeFormStoredData />
-              </FlexW1G>
-            }
-          />
-           <Route
-            path="/editor/:id"
-            element={
-              <FlexW1G>
-                <MemeViewerStoredCurrent basePath="" />
-                <MemeFormStoredData />
-              </FlexW1G>
-            }
-          />
+          <Route path="/editor" element={<PageEditor />} />
+          <Route path="/editor/:id" element={<PageEditor />} />
         </Routes>
-
         <Footer />
       </FlexH3G>
     </div>
   );
 };
+
+function PageEditor() {
+  const params=useParams();
+  useEffect(() => {
+    const current= store.getState().ressources.memes.find(m=>m.id===Number(params.id))
+    if(undefined!== current)store.dispatch(change(current))
+    else store.dispatch(clear());
+  }, [params,store.getState()])
+  
+  return (
+    <FlexW1G>
+      <MemeViewerStoredCurrent basePath="" />
+      <MemeFormStoredData />
+    </FlexW1G>
+  );
+}
 
 export default App;
